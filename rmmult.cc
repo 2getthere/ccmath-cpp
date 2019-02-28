@@ -4,11 +4,11 @@
  *  This code may be redistributed under the terms of the GNU library
  *  public license (LGPL). ( See the lgpl.license file for details.)
  * ------------------------------------------------------------------------
+ *	C++-ified by renej
  */
 #include <stdlib.h>
-void rmmult(double *rm,double *a,double *b,int n,int m,int l)
-{ double z,*q0,*p,*q; int i,j,k;
-  q0=(double *)calloc(m,sizeof(double));
+void rmmult(double *rm,const double *a,const double *b,int n,int m,int l)
+{ double z,q0[m],*q; const double *p; int i,j,k;
   for(i=0; i<l ;++i,++rm){
     for(k=0,p=b+i; k<m ;p+=l) q0[k++]= *p;
     for(j=0,p=a,q=rm; j<n ;++j,q+=l){
@@ -16,5 +16,4 @@ void rmmult(double *rm,double *a,double *b,int n,int m,int l)
       *q=z;
      }
    }
-  free(q0);
 }

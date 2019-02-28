@@ -4,15 +4,16 @@
  *  This code may be redistributed under the terms of the GNU library
  *  public license (LGPL). ( See the lgpl.license file for details.)
  * ------------------------------------------------------------------------
+ *	C++-ified by renej
  */
 #include <stdlib.h>
 #include <math.h>
 int minv(double *a,int n)
-{ int lc,*le; double s,t,tq=0.,zr=1.e-15;
-  double *pa,*pd,*ps,*p,*q,*q0;
+{ int lc,_le[n]; double s,t,tq=0.,zr=1.e-15;
+  double *pa,*pd,*ps,*p,*q,_q0[n];
+  int *le=_le;
+  double *q0=_q0;
   int i,j,k,m;
-  le=(int *)malloc(n*sizeof(int));
-  q0=(double *)malloc(n*sizeof(double));
   for(j=0,pa=pd=a; j<n ;++j,++pa,pd+=n+1){
     if(j>0){
       for(i=0,q=q0,p=pa; i<n ;++i,p+=n) *q++ = *p;
@@ -26,7 +27,7 @@ int minv(double *a,int n)
     for(k=j+1,ps=pd; k<n ;++k){
       if((t=fabs(*(ps+=n)))>s){ s=t; lc=k;}
      }
-    tq=tq>s?tq:s; if(s<zr*tq){ free(le-j); free(q0); return -1;}
+    tq=tq>s?tq:s; if(s<zr*tq){ return -1;}
     *le++ =lc;
     if(lc!=j){
       for(k=0,p=a+n*j,q=a+n*lc; k<n ;++k){
@@ -70,6 +71,5 @@ int minv(double *a,int n)
       t=*p; *p=*q; *q=t;
      }
    }
-  free(le); free(q0);
   return 0;
 }

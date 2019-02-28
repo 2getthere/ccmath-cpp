@@ -4,6 +4,7 @@
  *  This code may be redistributed under the terms of the GNU library
  *  public license (LGPL). ( See the lgpl.license file for details.)
  * ------------------------------------------------------------------------
+ *	C++-ified by renej
  */
 void trnm(double *a,int n)
 { double s,*p,*q;

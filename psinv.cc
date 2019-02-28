@@ -4,9 +4,10 @@
  *  This code may be redistributed under the terms of the GNU library
  *  public license (LGPL). ( See the lgpl.license file for details.)
  * ------------------------------------------------------------------------
+ *	C++-ified by renej
  */
 #include <math.h>
-#include "matutl.h"
+extern void trnm(double*,int);
 int psinv(double *v,int n)
 { double z,*p,*q,*r,*s,*t; int j,k;
   for(j=0,p=v; j<n ;++j,p+=n+1){

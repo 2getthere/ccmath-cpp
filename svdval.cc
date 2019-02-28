@@ -4,16 +4,17 @@
  *  This code may be redistributed under the terms of the GNU library
  *  public license (LGPL). ( See the lgpl.license file for details.)
  * ------------------------------------------------------------------------
+ * MWG: Removed calloc/free
  */
 #include <stdlib.h>
 #include <math.h>
-#include "matutl.h"
+extern int qrbdi(double *x,double *y,int l);
 int svdval(double *d,double *a,int m,int n)
-{ double *p,*p1,*q,*w,*v;
+{ double *p,*p1,*q,w[m],*v;
   double s,h,u;
   int i,j,k,mm,nm,ms;
   if(m<n) return -1;
-  w=(double *)calloc(m,sizeof(double));
+  for(i=0;i<m;++i) w[i]=0.0;    // MWG: Init to zero (calloc behaviour)
   for(i=0,mm=m,nm=n-1,p=a; i<n ;++i,--mm,--nm,p+=n+1){
     if(mm>1){
       for(j=0,q=p,s=0.; j<mm ;++j,q+=n){
@@ -51,6 +52,5 @@ int svdval(double *d,double *a,int m,int n)
    }
   qrbdi(d,w,n);
   for(i=0; i<n ;++i) if(d[i]<0.) d[i]= -d[i];
-  free(w);
   return 0;
 }
