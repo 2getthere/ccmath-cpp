@@ -1,0 +1,17 @@
+Run ./build.sh and install created .deb or .rpm packages
+
+A recent version of cmake is required. If cmake is not available or too old,
+it can be installed with:
+
+export CMAKE_HOME=/opt/cmake
+export CMAKE_VERSION=3.13.2
+wget https://github.com/Kitware/CMake/releases/download/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION}.tar.gz
+rm -rf cmake-${CMAKE_VERSION}
+tar xf cmake-${CMAKE_VERSION}.tar.gz
+cd cmake-${CMAKE_VERSION}
+./bootstrap --prefix=${CMAKE_HOME} --parallel=$(nproc)
+sudo make install -j$(nproc)
+cd ..
+rm -rf cmake-${CMAKE_VERSION}
+export PATH=${CMAKE_HOME}/bin:$PATH
+
