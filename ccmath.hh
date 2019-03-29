@@ -8,6 +8,7 @@
  *  public license (LGPL). ( See the lgpl.license file for details.)
  * ------------------------------------------------------------------------
  *	C++-ified by renej
+ *  C++-ified by lab
  *	Documentation copied by RKR from ccmath-2.2.1/manual/C01-matrix
  */
 
@@ -109,5 +110,44 @@ void mattr(double *a,const double *b,int m,int n);
               -1 -> input error m < n
  */
 int svdval(double *d,double *a,int m,int n);
+
+/**
+    Compute the eigenvalues and eigenvectors of a real symmetric matrix A.
+
+    void eigen(double *a,double *ev,int n)
+       a = pointer to store for symmetric n by n input
+           matrix A. The computation overloads this with an
+           orthogonal matrix of eigenvectors E.
+       ev = pointer to the array of the output eigenvalues
+       n = dimension parameter (dim(a)= n*n, dim(ev)= n)
+
+     The input and output matrices are related by
+
+          A = E*D*E~ where D is the diagonal matrix of eigenvalues
+          D[i,j] = ev[i] if i=j and 0 otherwise.
+
+     The columns of E are the eigenvectors.
+
+     return value: status flag with:
+               0 -> success
+              -1 -> input error n < 2
+              -2 -> qr decomposition failed
+ */
+int eigen(double *a,double *ev,int n);
+
+/*
+    Compute the eigenvalues of a real symmetric matrix A.
+
+     void eigval(double *a,double *ev,int n)
+       a = pointer to array of symmetric n by n input
+           matrix A. The computation alters these values.
+       ev = pointer to array of the output eigenvalues
+       n = dimension parameter (dim(a)= n*n, dim(ev)= n)
+     return value: status flag with:
+               0 -> success
+              -1 -> input error n < 2
+              -2 -> qr decomposition failed
+*/
+int eigval(double *a,double *ev,int n);
 
 #endif /* _ccmath_HH_ */
