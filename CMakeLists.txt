@@ -6,7 +6,7 @@ include(GNUInstallDirs)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra")
 
-add_library(ccmath-cpp SHARED mattr.cc minv.cc psinv.cc qrbdi.cc rmmult.cc svdval.cc trnm.cc vmul.cc)
+add_library(ccmath-cpp SHARED mattr.cc minv.cc psinv.cc qrbdi.cc rmmult.cc svdval.cc trnm.cc vmul.cc eigen.cc eigval.cc house.cc housev.cc qreval.cc qrevec.cc)
 
 set(CCMATH_VERSION "2.2.1")
 set(CPP_VERSION "1")
