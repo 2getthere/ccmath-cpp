@@ -14,8 +14,8 @@ int eigen(double *a,double *ev,int n)
 { 
     if (n < 2) return -1;
 
-    double dp[n];
-    for (int i=0; i<n; ++i) dp[i] = 0.0; // Removed called, init to zero
+    double dp[n]; // this assumes that the array is small enough to fit on the stack
+    for (int i=0; i<n; ++i) dp[i] = 0.0;
 
     housev(a,ev,dp,n);
     if (qrevec(ev,a,dp,n) < 0) return -2; 

@@ -12,9 +12,9 @@ void housev(double *a,double *d,double *dp,int n)
 { double sc,x,y,h;
   int i,j,k,m,e;
   double *qw,*pc,*p;
-  double qs_storage[n];
+  double qs_storage[n]; // this assumes that the array is small enough to fit on the stack
   double *qs = qs_storage;
-  for(i=0; i<n; ++i) qs[i] = 0.0;   // Removed calloc, init to zero
+  for(i=0; i<n; ++i) qs[i] = 0.0;
 
   for(j=0,pc=a; j<n-2 ;++j,pc+=n+1){
     m=n-j-1;

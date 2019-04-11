@@ -8,11 +8,12 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra")
 
 add_library(ccmath-cpp SHARED mattr.cc minv.cc psinv.cc qrbdi.cc rmmult.cc svdval.cc trnm.cc vmul.cc eigen.cc eigval.cc house.cc housev.cc qreval.cc qrevec.cc)
 
-set(CCMATH_VERSION "2.2.1")
-set(CPP_VERSION "1")
+set(CCMATH_VERSION "2.2.1") # fixed ccmath version
+set(CPP_VERSION "2") # increase with each new package release
+set(SO_MAJOR "1") # increase with each backwards incompatible change (and reset SO_MINOR to 0)
+set(SO_MINOR "1") # increase with each backwards compatible change
 
-# because main version (ccmath version) is fixed, 'cpp' version for .so.x
-set_target_properties(ccmath-cpp PROPERTIES VERSION "${CPP_VERSION}.0.0" SOVERSION ${CPP_VERSION})
+set_target_properties(ccmath-cpp PROPERTIES VERSION "${SO_MAJOR}.${SO_MINOR}.0" SOVERSION ${SO_MAJOR})
 
 install(TARGETS ccmath-cpp LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT runtime NAMELINK_SKIP)
 install(TARGETS ccmath-cpp LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT dev NAMELINK_ONLY)
