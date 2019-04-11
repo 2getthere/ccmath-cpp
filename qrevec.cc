@@ -4,6 +4,7 @@
  *  This code may be redistributed under the terms of the GNU library
  *  public license (LGPL). ( See the lgpl.license file for details.)
  * ------------------------------------------------------------------------
+ *	C++-ified by lab
  */
 #include <math.h>
 int qrevec(double *ev,double *evec,double *dp,int n)

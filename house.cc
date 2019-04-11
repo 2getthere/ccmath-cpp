@@ -4,14 +4,17 @@
  *  This code may be redistributed under the terms of the GNU library
  *  public license (LGPL). ( See the lgpl.license file for details.)
  * ------------------------------------------------------------------------
+ *	C++-ified by lab
  */
 #include <stdlib.h>
 #include <math.h>
 void house(double *a,double *d,double *dp,int n)
 { double sc,x,y,h;
   int i,j,k,m,e;
-  double *qw,*qs,*pc,*p;
-  qs=(double *)calloc(2*n,sizeof(double));
+  double *qw,*pc,*p;
+  double qs[2*n];
+  for(i=0; i<2*n;++i) qs[i] = 0.0; // Removed called, init to zero
+
   for(j=0,qw=qs+n,pc=a; j<n ;pc+=n+1) qw[j++]= *pc;
   for(j=0,pc=a; j<n-2 ;++j,pc+=n+1){
     m=n-j-1;
@@ -43,5 +46,4 @@ void house(double *a,double *d,double *dp,int n)
     *pc=qw[j];
     for(i=1,p=pc+n; i<n-j ;p+=n) pc[i++]= *p;
    }
-  free(qs);
 }

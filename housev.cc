@@ -4,14 +4,18 @@
  *  This code may be redistributed under the terms of the GNU library
  *  public license (LGPL). ( See the lgpl.license file for details.)
  * ------------------------------------------------------------------------
+ *	C++-ified by lab
  */
 #include <stdlib.h>
 #include <math.h>
 void housev(double *a,double *d,double *dp,int n)
 { double sc,x,y,h;
   int i,j,k,m,e;
-  double *qw,*qs,*pc,*p;
-  qs=(double *)calloc(n,sizeof(double));
+  double *qw,*pc,*p;
+  double qs_storage[n];
+  double *qs = qs_storage;
+  for(i=0; i<n; ++i) qs[i] = 0.0;   // Removed calloc, init to zero
+
   for(j=0,pc=a; j<n-2 ;++j,pc+=n+1){
     m=n-j-1;
     for(i=1,sc=0.; i<=m ;++i) sc+=pc[i]*pc[i];
@@ -38,7 +42,6 @@ void housev(double *a,double *d,double *dp,int n)
     d[j]= *pc; dp[j]=sc;
    }
   d[j]= *pc; dp[j]= *(pc+1); d[j+1]= *(pc+=n+1);
-  free(qs);
   for(i=0,m=n+n,p=pc; i<m ;++i) *p-- =0.;
   *pc=1.; *(pc-=n+1)=1.; qw=pc-n;
   for(m=2; m<n ;++m,qw-=n+1){
