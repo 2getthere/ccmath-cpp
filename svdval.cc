@@ -8,13 +8,15 @@
  */
 #include <stdlib.h>
 #include <math.h>
+#include "array_storage.hh"
 extern int qrbdi(double *x,double *y,int l);
 int svdval(double *d,double *a,int m,int n)
-{ double *p,*p1,*q,w[m],*v;
+{ double *p,*p1,*q,*v;
   double s,h,u;
   int i,j,k,mm,nm,ms;
   if(m<n) return -1;
-  for(i=0;i<m;++i) w[i]=0.0;    // MWG: Init to zero (calloc behaviour)
+  array_storage<double> w_storage(m);
+  double *w = w_storage.array();
   for(i=0,mm=m,nm=n-1,p=a; i<n ;++i,--mm,--nm,p+=n+1){
     if(mm>1){
       for(j=0,q=p,s=0.; j<mm ;++j,q+=n){

@@ -8,12 +8,13 @@
  */
 #include <stdlib.h>
 #include <math.h>
+#include "array_storage.hh"
 void house(double *a,double *d,double *dp,int n)
 { double sc,x,y,h;
   int i,j,k,m,e;
   double *qw,*pc,*p;
-  double qs[2*n]; // this assumes that the array is small enough to fit on the stack
-  for(i=0; i<2*n;++i) qs[i] = 0.0;
+  array_storage<double> qs_storage(2*n);
+  double *qs = qs_storage.array();
 
   for(j=0,qw=qs+n,pc=a; j<n ;pc+=n+1) qw[j++]= *pc;
   for(j=0,pc=a; j<n-2 ;++j,pc+=n+1){

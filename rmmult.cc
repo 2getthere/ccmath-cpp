@@ -7,8 +7,11 @@
  *	C++-ified by renej
  */
 #include <stdlib.h>
+#include "array_storage.hh"
 void rmmult(double *rm,const double *a,const double *b,int n,int m,int l)
-{ double z,q0[m],*q; const double *p; int i,j,k;
+{ double z,*q; const double *p; int i,j,k;
+  array_storage<double> q0_storage(m);
+  double *q0 = q0_storage.array();
   for(i=0; i<l ;++i,++rm){
     for(k=0,p=b+i; k<m ;p+=l) q0[k++]= *p;
     for(j=0,p=a,q=rm; j<n ;++j,q+=l){

@@ -8,11 +8,14 @@
  */
 #include <stdlib.h>
 #include <math.h>
+#include "array_storage.hh"
 int minv(double *a,int n)
-{ int lc,_le[n]; double s,t,tq=0.,zr=1.e-15;
-  double *pa,*pd,*ps,*p,*q,_q0[n];
-  int *le=_le;
-  double *q0=_q0;
+{ int lc; double s,t,tq=0.,zr=1.e-15;
+  double *pa,*pd,*ps,*p,*q;
+  array_storage<int> le_storage(n, false);
+  int *le = le_storage.array();
+  array_storage<double> q0_storage(n, false);
+  double *q0 = q0_storage.array();
   int i,j,k,m;
   for(j=0,pa=pd=a; j<n ;++j,++pa,pd+=n+1){
     if(j>0){

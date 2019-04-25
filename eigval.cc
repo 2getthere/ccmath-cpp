@@ -7,14 +7,15 @@
  * C++-ified by lab
  */
 #include <stdlib.h>
+#include "array_storage.hh"
 extern void house(double *a,double *d,double *dp,int n);
 extern int qreval(double *e,double *d,int m);
 int eigval(double *a,double *ev,int n)
-{ 
+{
     if (n < 2) return -1;
 
-    double dp[n]; // this assumes that the array is small enough to fit on the stack
-    for (int i=0; i<n; ++i) dp[i] = 0.0;
+    array_storage<double> dp_storage(n);
+    double *dp = dp_storage.array();
 
     house(a,ev,dp,n);
     if (qreval(ev,dp,n) < 0) return -2;
