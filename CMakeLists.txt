@@ -4,14 +4,19 @@ project(ccmath-cpp)
 
 include(GNUInstallDirs)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Wextra -pedantic")
+
+# assume the target platform is the same as the host
+if(${CMAKE_SYSTEM_PROCESSOR} MATCHES "i[36]86")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=atom -mfpmath=sse")
+endif(${CMAKE_SYSTEM_PROCESSOR} MATCHES "i[36]86")
 
 add_library(ccmath-cpp SHARED mattr.cc minv.cc psinv.cc qrbdi.cc rmmult.cc svdval.cc trnm.cc vmul.cc eigen.cc eigval.cc house.cc housev.cc qreval.cc qrevec.cc)
 
 set(CCMATH_VERSION "2.2.1") # fixed ccmath version
-set(CPP_VERSION "2") # increase with each new package release
+set(CPP_VERSION "3") # increase with each new package release
 set(SO_MAJOR "1") # increase with each backwards incompatible change (and reset SO_MINOR to 0)
-set(SO_MINOR "1") # increase with each backwards compatible change
+set(SO_MINOR "2") # increase with each backwards compatible change
 
 set_target_properties(ccmath-cpp PROPERTIES VERSION "${SO_MAJOR}.${SO_MINOR}.0" SOVERSION ${SO_MAJOR})
 
