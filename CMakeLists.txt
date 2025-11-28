@@ -14,28 +14,41 @@ endif(${CMAKE_SYSTEM_PROCESSOR} MATCHES "i[36]86")
 add_library(ccmath-cpp SHARED mattr.cc minv.cc psinv.cc qrbdi.cc rmmult.cc svdval.cc trnm.cc vmul.cc eigen.cc eigval.cc house.cc housev.cc qreval.cc qrevec.cc)
 
 set(CCMATH_VERSION "2.2.1") # fixed ccmath version
-set(CPP_VERSION "3") # increase with each new package release
+set(CPP_VERSION "4") # increase with each new package release
 set(SO_MAJOR "1") # increase with each backwards incompatible change (and reset SO_MINOR to 0)
 set(SO_MINOR "2") # increase with each backwards compatible change
+set(PKG_NAME_RUNTIME libccmath-cpp)
+set(PKG_NAME_DEV ${PKG_NAME_RUNTIME}-dev)
 
 set_target_properties(ccmath-cpp PROPERTIES VERSION "${SO_MAJOR}.${SO_MINOR}.0" SOVERSION ${SO_MAJOR})
 
 install(TARGETS ccmath-cpp LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT runtime NAMELINK_SKIP)
 install(TARGETS ccmath-cpp LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT dev NAMELINK_ONLY)
 install(FILES ccmath.hh DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} COMPONENT dev)
-install(FILES README lgpl.license DESTINATION ${CMAKE_INSTALL_DOCDIR} COMPONENT runtime)
+install(FILES README DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/doc/${PKG_NAME_RUNTIME} COMPONENT runtime)
+install(FILES README DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/doc/${PKG_NAME_DEV} COMPONENT dev)
+install(FILES lgpl.license RENAME copyright DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/doc/${PKG_NAME_RUNTIME} COMPONENT runtime)
+install(FILES lgpl.license RENAME copyright DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/doc/${PKG_NAME_DEV} COMPONENT dev)
+
+add_custom_command(
+    DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/changelog"
+    COMMAND gzip -cn9 "${CMAKE_CURRENT_SOURCE_DIR}/changelog" > "${CMAKE_CURRENT_BINARY_DIR}/changelog.Debian.gz"
+    OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/changelog.Debian.gz"
+)
+add_custom_target(changelog ALL DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/changelog.Debian.gz")
 
 set(CPACK_COMPONENT_DEV_DEPENDS runtime)
 set(CPACK_COMPONENTS_ALL dev runtime)
 
-set(CPACK_PACKAGE_NAME libccmath-cpp)
+set(CPACK_PACKAGE_NAME ${PKG_NAME_RUNTIME})
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Selection of CCMATH functions, adapted for C++")
 set(CPACK_PACKAGE_CONTACT "Roel van de Kraats <roel@2getthere.eu>")
 set(CPACK_PACKAGE_VENDOR "2getthere b.v. (https://www.2getthere.eu)")
 set(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_SOURCE_DIR}/README")
+set(CPACK_STRIP_FILES ON)
 
-set(CPACK_COMPONENT_DEV_DISPLAY_NAME "${CPACK_PACKAGE_NAME}-dev")
-set(CPACK_COMPONENT_RUNTIME_DISPLAY_NAME "${CPACK_PACKAGE_NAME}")
+set(CPACK_COMPONENT_DEV_DISPLAY_NAME "${PKG_NAME_DEV}")
+set(CPACK_COMPONENT_RUNTIME_DISPLAY_NAME "${PKG_NAME_RUNTIME}")
 
 # Try to find distro id
 execute_process(COMMAND sh -c "grep '^ID=' /etc/os-release | sed -e 's/^.*=//g' -e 's/\"//g'" ERROR_QUIET OUTPUT_VARIABLE OS_ID)
@@ -44,15 +57,20 @@ string(STRIP "${OS_ID}" OS_ID)
 # For Debian-based distros we want to create DEB packages.
 if("${OS_ID}" MATCHES "ubuntu|debian")
 
+    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/changelog.Debian.gz DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/doc/${PKG_NAME_RUNTIME} COMPONENT runtime)
+    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/changelog.Debian.gz DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/doc/${PKG_NAME_DEV} COMPONENT dev)
+
     set(CPACK_GENERATOR "DEB")
     set(CPACK_DEB_COMPONENT_INSTALL "ON")
     set(CPACK_PACKAGE_VERSION "${CCMATH_VERSION}-${CPP_VERSION}")
-    set(CPACK_DEBIAN_PACKAGE_SECTION "misc")
+    set(CPACK_DEBIAN_PACKAGE_SECTION "libs")
     set(CPACK_DEBIAN_PACKAGE_HOMEPAGE "https://github.com/2getthere/ccmath-cpp")
-    set(CPACK_DEBIAN_DEV_PACKAGE_DEPENDS "${CPACK_PACKAGE_NAME} (= ${CPACK_PACKAGE_VERSION})")
+    set(CPACK_DEBIAN_DEV_PACKAGE_DEPENDS "${PKG_NAME_RUNTIME} (= ${CPACK_PACKAGE_VERSION})")
     set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
-    string(TOLOWER "${CPACK_PACKAGE_NAME}-dev" CPACK_DEBIAN_DEV_PACKAGE_NAME)
-    string(TOLOWER "${CPACK_PACKAGE_NAME}" CPACK_DEBIAN_RUNTIME_PACKAGE_NAME)
+    set(CPACK_DEBIAN_PACKAGE_GENERATE_SHLIBS ON)
+    set(CPACK_DEBIAN_PACKAGE_GENERATE_SHLIBS_POLICY ">=")
+    string(TOLOWER "${PKG_NAME_DEV}" CPACK_DEBIAN_DEV_PACKAGE_NAME)
+    string(TOLOWER "${PKG_NAME_RUNTIME}" CPACK_DEBIAN_RUNTIME_PACKAGE_NAME)
     execute_process(COMMAND sh -c "(grep DISTRIB_CODENAME /etc/lsb-release 2>/dev/null || grep VERSION_CODENAME /etc/os-release) | sed 's/^.*=//g'" OUTPUT_VARIABLE OS_CODENAME)
     string(STRIP "${OS_CODENAME}" OS_CODENAME)
     execute_process(COMMAND dpkg --print-architecture OUTPUT_VARIABLE CPACK_PACKAGE_ARCHITECTURE)
@@ -84,12 +102,12 @@ elseif("${OS_ID}" MATCHES "fedora|centos|rhel")
     string(STRIP "${CPACK_PACKAGE_ARCHITECTURE}" CPACK_PACKAGE_ARCHITECTURE)
     set(CPACK_RPM_PACKAGE_AUTOREQ ON)
     set(VERSION_WITH_DIST "${CPACK_RPM_PACKAGE_VERSION}-${CPACK_RPM_PACKAGE_RELEASE}.${CPACK_RPM_PACKAGE_RELEASE_DIST}")
-    set(CPACK_RPM_DEV_PACKAGE_REQUIRES "${CPACK_PACKAGE_NAME} = ${VERSION_WITH_DIST}")
-    string(TOLOWER "${CPACK_PACKAGE_NAME}-dev" CPACK_RPM_DEV_PACKAGE_NAME)
-    string(TOLOWER "${CPACK_PACKAGE_NAME}" CPACK_RPM_RUNTIME_PACKAGE_NAME)
+    set(CPACK_RPM_DEV_PACKAGE_REQUIRES "${PKG_NAME_RUNTIME} = ${VERSION_WITH_DIST}")
+    string(TOLOWER "${PKG_NAME_DEV}" CPACK_RPM_DEV_PACKAGE_NAME)
+    string(TOLOWER "${PKG_NAME_RUNTIME}" CPACK_RPM_RUNTIME_PACKAGE_NAME)
     set(FULL_VERSION "${VERSION_WITH_DIST}.${CPACK_PACKAGE_ARCHITECTURE}")
-    string(TOLOWER "${CPACK_PACKAGE_NAME}-dev-${FULL_VERSION}.rpm" CPACK_RPM_DEV_FILE_NAME)
-    string(TOLOWER "${CPACK_PACKAGE_NAME}-${FULL_VERSION}.rpm" CPACK_RPM_RUNTIME_FILE_NAME)
+    string(TOLOWER "${PKG_NAME_DEV}-${FULL_VERSION}.rpm" CPACK_RPM_DEV_FILE_NAME)
+    string(TOLOWER "${PKG_NAME_RUNTIME}-${FULL_VERSION}.rpm" CPACK_RPM_RUNTIME_FILE_NAME)
 
 else()
     message(WARNING "Could not determine type of package to create")

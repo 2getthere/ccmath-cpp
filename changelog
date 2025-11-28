@@ -1,0 +1,33 @@
+ccmath-cpp (2.2.1-4) unstable; urgency=medium
+
+    * CMake: Improve determining distro id
+    * Fix Debian install directory (/usr/lib/x86_64-linux-gnu)
+    * Fix some deb package issues reported by lintian
+    * Add debian changelog
+    * Enable shlibs
+
+ -- Roel van de Kraats <roel@2getthere.eu>  Fri, 28 Nov 2025 12:53:31 +0100
+
+ccmath-cpp (2.2.1-3) unstable; urgency=medium
+
+    * Keep small arrays on the stack, but use the heap for larger arrays.
+    * Set optimization for x86.
+
+ -- Roel van de Kraats <roel@2getthere.eu>  Thu, 25 Apr 2019 08:29:04 +0200
+
+ccmath-cpp (2.2.1-2) unstable; urgency=medium
+
+    * Added subset of original ccmath files to support eigenvalues and eigenvectors computation.
+    * Subset of original ccmath files from http://freecode.com/projects/ccmath version 2.2.1; .c files (all from ccmath/matrix/) renamed to .cc
+    * C++-ified by lab
+    * Update package version to 2.2.1-2, using so.1.1.0 since it is a backwards compatible change. Also improve some code comments.
+
+ -- Roel van de Kraats <roel@2getthere.eu>  Thu, 11 Apr 2019 14:00:20 +0200
+
+ccmath-cpp (2.2.1-1) unstable; urgency=medium
+
+    * Subset of original ccmath files from http://freecode.com/projects/ccmath version 2.2.1; .c files (all from ccmath/matrix/) renamed to .cc
+    * C++-ify source files. Add header for the selected set of functions, using documentation from ccmath-2.2.1/manual/C01-matrix.
+    * Add cmake scripts for building and creating deb and/or rpm packages.
+
+ -- Roel van de Kraats <roel@2getthere.eu>  Mon, 4 Mar 2019 16:42:25 +0100
